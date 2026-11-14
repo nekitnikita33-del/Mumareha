@@ -13,22 +13,36 @@
     .brand { margin: 0; font-size: 21px; font-weight: 800; letter-spacing: -.5px; }
     .live { color: #8de0b1; font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; }
     .card { background: #141f2b; border: 1px solid #263747; border-radius: 18px; box-shadow: 0 10px 28px rgba(0,0,0,.16); }
+    
     .controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 15px; margin-bottom: 12px; }
-    .control-label { color: #91a5b5; font-size: 12px; }
-    .place-name { display: block; margin-top: 3px; font-size: 16px; font-weight: 750; }
+    .date-nav { display: flex; align-items: center; gap: 10px; }
+    .nav-btn { border: 0; background: #1b2a38; color: #8de0b1; font-size: 20px; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; display: grid; place-items: center; transition: 0.2s; }
+    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .nav-btn:hover:not(:disabled) { background: #263747; }
+    .place-info { text-align: center; }
+    .place-name { display: block; font-size: 16px; font-weight: 750; }
+    .control-label { color: #91a5b5; font-size: 11px; display: block; margin-top: 2px; }
+    
     .refresh { border: 0; border-radius: 12px; padding: 11px 16px; color: #082016; background: #8de0b1; font-size: 13px; font-weight: 800; cursor: pointer; }
     .refresh:hover { background: #a7edc5; }
     .refresh:active { transform: translateY(1px); }
     .status { min-height: 18px; margin: 0 2px 13px; color: #91a5b5; font-size: 11px; }
     .status.error { color: #ff9b9b; }
+    
     .overview { display: grid; grid-template-columns: minmax(0, 1fr) minmax(170px, 27%); gap: 12px; margin-bottom: 18px; }
     .weather { padding: 17px; }
     .eyebrow { color: #8da3b5; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
     .temperature { margin: 8px 0 14px; font-size: clamp(42px, 10vw, 60px); line-height: 1; font-weight: 800; letter-spacing: -2px; }
+    
     .metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
     .metric { padding: 10px 9px; border-radius: 12px; background: #1b2a38; min-width: 0; }
     .metric-label { display: block; color: #91a5b5; font-size: 10px; margin-bottom: 5px; }
     .metric-value { display: block; font-size: 15px; font-weight: 750; overflow-wrap: anywhere; }
+    
+    .trend { font-size: 10px; font-weight: bold; margin-left: 4px; }
+    .trend.up { color: #ff9b9b; }
+    .trend.down { color: #8de0b1; }
+    
     .side { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
     .bait-card { padding: 12px; }
     .bait-value { margin-top: 8px; font-size: 14px; font-weight: 750; color: #b9f2d0; overflow-wrap: anywhere; }
@@ -37,18 +51,27 @@
     .best-card { flex: 1; padding: 12px; }
     .best-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
     .fish-tag { padding: 5px 8px; border-radius: 20px; color: #b9f2d0; background: #1d3a32; font-size: 10px; font-weight: 700; }
+    
     .forecast-heading { display: flex; align-items: end; justify-content: space-between; gap: 10px; margin: 0 2px 10px; }
     .forecast-heading h2 { margin: 0; font-size: 17px; }
     .forecast-heading span { color: #8298aa; font-size: 10px; text-align: right; }
     .fish-selector { display: flex; gap: 7px; overflow-x: auto; padding: 2px 1px 10px; scrollbar-width: thin; scrollbar-color: #40596b transparent; }
     .fish-button { flex: 0 0 auto; border: 1px solid #2b4051; border-radius: 22px; padding: 8px 13px; color: #b7c7d2; background: #15222e; font-size: 12px; font-weight: 700; cursor: pointer; }
     .fish-button.selected { color: #092116; border-color: #8de0b1; background: #8de0b1; }
-    .hourly { padding: 13px 12px 15px; }
+    .hourly { padding: 13px 12px 15px; margin-bottom: 18px;}
     .hours-grid { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 5px; }
     .hour { min-width: 0; padding: 9px 3px; border-radius: 11px; text-align: center; background: #1b2a38; }
     .hour-time { display: block; color: #a9bac6; font-size: 10px; }
     .score-ring { display: grid; place-items: center; width: 34px; height: 34px; margin: 8px auto 6px; border: 3px solid #536879; border-radius: 50%; font-size: 11px; font-weight: 800; }
     .score-label { display: block; color: #91a5b5; font-size: 8px; line-height: 1.2; }
+    
+    .forecast-list { display: flex; flex-direction: column; gap: 1px; background: #263747; border-radius: 12px; overflow: hidden; }
+    .forecast-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #1b2a38; font-size: 13px; }
+    .f-time { font-weight: bold; color: #edf4f8; width: 50px; }
+    .f-temp { color: #8de0b1; font-weight: bold; width: 45px; text-align: right; }
+    .f-press { color: #b7c7d2; width: 70px; text-align: right; }
+    .f-wind { color: #a9bac6; width: 70px; text-align: right; }
+    
     .disclaimer { margin: 10px 3px 0; color: #708596; font-size: 10px; line-height: 1.5; }
     @media (max-width: 520px) {
       .app { padding: 14px 12px 24px; }
@@ -66,6 +89,9 @@
       .score-ring { width: 29px; height: 29px; font-size: 10px; }
       .hour-time { font-size: 9px; }
       .score-label { font-size: 7px; }
+      .forecast-row { padding: 8px 10px; font-size: 12px; }
+      .f-press { width: 60px; }
+      .f-wind { width: 60px; }
     }
     @media (max-width: 360px) {
       .overview { grid-template-columns: minmax(0, 1fr) 31%; }
@@ -82,203 +108,250 @@
     </header>
 
     <section class="controls card" aria-label="Настройки">
-      <div>
-        <span class="control-label">Точка прогноза</span>
-        <strong class="place-name">Мумариха</strong>
+      <div class="date-nav">
+        <button class="nav-btn" id="prevDay" type="button" aria-label="Предыдущий день">👈</button>
+        <div class="place-info">
+          <strong class="place-name">Мумариха</strong>
+          <span class="control-label" id="dateLabel">Сегодня</span>
+        </div>
+        <button class="nav-btn" id="nextDay" type="button" aria-label="Следующий день" disabled>👉</button>
       </div>
       <button class="refresh" id="refreshButton" type="button">Обновить ↻</button>
     </section>
-    <p class="status" id="status" role="status" aria-live="polite">Загружаем текущую погоду…</p>
+    <p class="status" id="status" role="status" aria-live="polite">Загружаем данные…</p>
 
     <section class="overview" aria-label="Погода и место">
-      <article class="weather card">
-        <div class="eyebrow">Сейчас в Мумарихе</div>
-        <div class="temperature" id="temperature">—°</div>
-        <div class="metrics">
-          <div class="metric"><span class="metric-label">Давление</span><strong class="metric-value" id="pressure">— мм</strong></div>
-          <div class="metric"><span class="metric-label">Ветер</span><strong class="metric-value" id="wind">— м/с</strong></div>
-          <div class="metric"><span class="metric-label">Порывы</span><strong class="metric-value" id="gusts">— м/с</strong></div>
-          <div class="metric"><span class="metric-label">Направление</span><strong class="metric-value" id="direction">—</strong></div>
-          <div class="metric"><span class="metric-label">Облачность</span><strong class="metric-value" id="clouds">— %</strong></div>
-          <div class="metric"><span class="metric-label">Радиация</span><strong class="metric-value" id="radiation">— Вт/м²</strong></div>
-          <div class="metric"><span class="metric-label">Вода</span><strong class="metric-value" id="water">—</strong></div>
+          <article class="weather card">
+      <div class="eyebrow" id="weatherTitle">Сейчас в Мумарихе</div>
+      <div class="temperature" id="temperature">—°</div>
+      <div class="metrics">
+        <div class="metric">
+          <span class="metric-label">Давление</span>
+          <strong class="metric-value"><span id="pressure">—</span> <span id="pressureTrend" class="trend"></span></strong>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Ветер</span>
+          <strong class="metric-value" id="wind">—</strong>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Порывы</span>
+          <strong class="metric-value" id="gusts">—</strong>
+        </div>
+        <div class="metric"><span class="metric-label">Направление</span><strong class="metric-value" id="direction">—</strong></div>
+        <div class="metric"><span class="metric-label">Облачность</span><strong class="metric-value" id="clouds">—</strong></div>
+        <div class="metric"><span class="metric-label">Радиация</span><strong class="metric-value" id="radiation">—</strong></div>
+        <div class="metric"><span class="metric-label">Вода</span><strong class="metric-value" id="water">—</strong></div>
+      </div>
+    </article>
+
+    <aside class="side">
+      <article class="bait-card card">
+        <div class="eyebrow">Лучшая приманка</div>
+        <div class="bait-value" id="baitValue">—</div>
+      </article>
+      <article class="moon-card card">
+        <div class="eyebrow">Луна</div>
+        <div class="moon-value" id="moonValue">—</div>
+      </article>
+      <article class="best-card card">
+        <div class="eyebrow">Лучше клюёт сегодня</div>
+        <div class="best-list">
+          <span class="fish-tag">Окунь</span>
+          <span class="fish-tag">Щука</span>
+          <span class="fish-tag">Жерех</span>
         </div>
       </article>
+    </aside>
+  </section>
 
-      <aside class="side">
-        <article class="bait-card card">
-          <div class="eyebrow">Лучшая приманка</div>
-          <div class="bait-value" id="baitValue">—</div>
-        </article>
-        
-        <article class="moon-card card">
-          <div class="eyebrow">Луна</div>
-          <div class="moon-value" id="moonValue">—</div>
-        </article>
+  <section aria-label="Почасовой прогноз клёва">
+    <div class="forecast-heading">
+      <h2>Клёв по часам</h2>
+      <span id="selectedFishLabel">Рыба: Окунь</span>
+    </div>
+    <div class="fish-selector" id="fishSelector" aria-label="Выбор рыбы">
+      <button class="fish-button selected" type="button" data-fish="Окунь">Окунь</button>
+      <button class="fish-button" type="button" data-fish="Щука">Щука</button>
+      <button class="fish-button" type="button" data-fish="Сом">Сом</button>
+      <button class="fish-button" type="button" data-fish="Жерех">Жерех</button>
+      <button class="fish-button" type="button" data-fish="Густера">Густера</button>
+    </div>
+    <div class="hourly card">
+      <div class="hours-grid" id="hoursGrid"></div>
+    </div>
+  </section>
 
-        <article class="best-card card">
-          <div class="eyebrow">Лучше клюёт сегодня</div>
-          <div class="best-list">
-            <span class="fish-tag">Окунь</span>
-            <span class="fish-tag">Щука</span>
-            <span class="fish-tag">Жерех</span>
-          </div>
-        </article>
-      </aside>
-    </section>
+  <section aria-label="Прогноз на 24 часа">
+    <div class="forecast-heading">
+      <h2>Прогноз на 24 часа</h2>
+      <span>Время, t°, давление, ветер</span>
+    </div>
+    <div class="card">
+      <div class="forecast-list" id="next24List"></div>
+    </div>
+  </section>
 
-    <section aria-label="Почасовой прогноз клёва">
-      <div class="forecast-heading">
-        <h2>Клёв по часам</h2>
-        <span id="selectedFishLabel">Рыба: Окунь</span>
-      </div>
-      <div class="fish-selector" id="fishSelector" aria-label="Выбор рыбы">
-        <button class="fish-button selected" type="button" data-fish="Окунь">Окунь</button>
-        <button class="fish-button" type="button" data-fish="Щука">Щука</button>
-        <button class="fish-button" type="button" data-fish="Сом">Сом</button>
-        <button class="fish-button" type="button" data-fish="Жерех">Жерех</button>
-        <button class="fish-button" type="button" data-fish="Густера">Густера</button>
-      </div>
-      <div class="hourly card">
-        <div class="hours-grid" id="hoursGrid"></div>
-      </div>
-      <p class="disclaimer">Оценка клёва ориентировочная и не является гарантией улова. Почасовые баллы — примерная справочная модель по времени суток, а не прогноз активности рыбы от Open‑Meteo.</p>
-    </section>
-  </main>
+  <p class="disclaimer">Оценка клёва ориентировочная и не является гарантией улова. Модель учитывает время суток. Прогноз на 24 часа строится по данным Open-Meteo.</p>
+</main>
 
-  <!-- Подключение библиотеки для расчета фазы Луны -->
-  <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
 
-  <script>
-        "use strict";
+<script>
+  "use strict";
 
-    const LATITUDE = 56.311017;
-    const LONGITUDE = 46.502217;
-    const WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=56.311017&longitude=46.502217&current=temperature_2m,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m,cloud_cover,shortwave_radiation&wind_speed_unit=ms&timezone=auto";
-    const DIRECTIONS = ["С", "СВ", "В", "ЮВ", "Ю", "ЮЗ", "З", "СЗ"];
-    const HOURS = ["3:00", "6:00", "8:00", "12:00", "14:00", "17:00", "19:00", "21:00", "23:00"];
+const LATITUDE = 56.311017;
+const LONGITUDE = 46.502217;
 
-    const FISH_SCORES = {
-      "Окунь":   [2, 4, 5, 2, 2, 4, 5, 3, 2],
-      "Щука":    [3, 4, 5, 2, 2, 4, 5, 4, 3],
-      "Сом":     [1, 1, 2, 2, 2, 3, 4, 5, 5],
-      "Жерех":   [2, 3, 5, 3, 2, 4, 5, 3, 1],
-      "Густера": [2, 3, 3, 4, 3, 3, 3, 2, 1]
-    };
+const WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=56.311017&longitude=46.502217&current=temperature_2m,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m,cloud_cover,shortwave_radiation&hourly=temperature_2m,surface_pressure,wind_speed_10m&past_days=3&forecast_days=2&wind_speed_unit=ms&timezone=auto";
 
-    const BAITS = {
-      "Окунь":   "—",
-      "Щука":    "—",
-      "Сом":     "—",
-      "Жерех":   "—",
-      "Густера": "—"
-    };
+const DIRECTIONS = ["С", "СВ", "В", "ЮВ", "Ю", "ЮЗ", "З", "СЗ"];
+const HOURS = ["3:00", "6:00", "8:00", "12:00", "14:00", "17:00", "19:00", "21:00", "23:00"];
 
-    const byId = (id) => document.getElementById(id);
+const FISH_SCORES = {
+  "Окунь":   [2, 4, 5, 2, 2, 4, 5, 3, 2],
+  "Щука":    [3, 4, 5, 2, 2, 4, 5, 4, 3],
+  "Сом":     [1, 1, 2, 2, 2, 3, 4, 5, 5],
+  "Жерех":   [2, 3, 5, 3, 2, 4, 5, 3, 1],
+  "Густера": [2, 3, 3, 4, 3, 3, 3, 2, 1]
+};
 
-    function getWindDirection(degrees) {
-      if (!Number.isFinite(degrees)) return "—";
-      return DIRECTIONS[Math.round(degrees / 45) % 8];
+const BAITS = { "Окунь": "—", "Щука": "—", "Сом": "—", "Жерех": "—", "Густера": "—" };
+
+const byId = (id) => document.getElementById(id);
+
+let rawData = null;      
+let dayOffset = 0;       
+
+function getWindDirection(degrees) {
+  if (!Number.isFinite(degrees)) return "—";
+  return DIRECTIONS[Math.round(degrees / 45) % 8];
+}
+
+function formatNumber(value, digits = 1) {
+  if (!Number.isFinite(value)) return "—";
+  return Number(value.toFixed(digits)).toString();
+}
+
+async function loadWeather() {
+  const button = byId("refreshButton");
+  const status = byId("status");
+  button.disabled = true;
+  status.textContent = "Обновляем данные…";
+  status.classList.remove("error");
+
+  try {
+    const response = await fetch(WEATHER_URL, { cache: "no-store" });
+    if (!response.ok) throw new Error("Ошибка API: HTTP " + response.status);
+
+    rawData = await response.json();
+    
+    renderCurrent();
+    renderNext24Hours();
+    
+    status.textContent = "Обновлено: " + new Date().toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
+  } catch (error) {
+    status.textContent = "Ошибка загрузки: " + error.message;
+    status.classList.add("error");
+  } finally {
+    button.disabled = false;
+  }
+}
+
+function renderCurrent() {
+  if (!rawData || !rawData.current) return;
+
+  const current = rawData.current;
+  
+  if (dayOffset === 0) {
+    byId("weatherTitle").textContent = "Сейчас в Мумарихе";
+    byId("temperature").textContent = formatNumber(current.temperature_2m, 1) + "°C";
+    byId("pressure").textContent = formatNumber(current.surface_pressure / 1.333, 0) + " мм";
+    byId("wind").textContent = formatNumber(current.wind_speed_10m, 1) + " м/с";
+    byId("gusts").textContent = formatNumber(current.wind_gusts_10m, 1) + " м/с";
+    byId("direction").textContent = getWindDirection(current.wind_direction_10m);
+    byId("clouds").textContent = formatNumber(current.cloud_cover, 0) + " %";
+    byId("radiation").textContent = formatNumber(current.shortwave_radiation, 0) + " Вт/м²";
+  } else {
+    const date = new Date();
+    date.setDate(date.getDate() + dayOffset);
+    const dateStr = date.toISOString().split('T')[0];
+    const targetTime = dateStr + "T12:00";
+    
+    const idx = rawData.hourly.time.indexOf(targetTime);
+    if (idx !== -1) {
+      byId("weatherTitle").textContent = "Днем " + date.toLocaleDateString("ru-RU", { day: 'numeric', month: 'short' });
+      byId("temperature").textContent = formatNumber(rawData.hourly.temperature_2m[idx], 1) + "°C";
+      byId("pressure").textContent = formatNumber(rawData.hourly.surface_pressure[idx] / 1.333, 0) + " мм";
+      byId("wind").textContent = formatNumber(rawData.hourly.wind_speed_10m[idx], 1) + " м/с";
+      byId("gusts").textContent = "—";
+      byId("direction").textContent = "—";
+      byId("clouds").textContent = "—";
+      byId("radiation").textContent = "—";
     }
+  }
 
-    function formatNumber(value, digits = 1) {
-      if (!Number.isFinite(value)) return "—";
-      return Number(value.toFixed(digits)).toString();
+  let pTrendEl = byId("pressureTrend");
+  let currentPressure = current.surface_pressure;
+  
+  if (rawData.hourly && rawData.hourly.surface_pressure) {
+    const nowStr = current.time.substring(0, 14) + "00";
+    const idx = rawData.hourly.time.indexOf(nowStr);
+    if (idx > 0) {
+       const prevP = rawData.hourly.surface_pressure[idx - 1];
+       const diff = currentPressure - prevP;
+       if (diff > 0.5) { pTrendEl.textContent = "↑"; pTrendEl.className = "trend up"; }
+       else if (diff < -0.5) { pTrendEl.textContent = "↓"; pTrendEl.className = "trend down"; }
+       else { pTrendEl.textContent = "→"; pTrendEl.className = "trend"; }
     }
+  }
+  
+  byId("prevDay").disabled = (dayOffset <= -3);
+  byId("nextDay").disabled = (dayOffset >= 0);
+  
+  const labelDate = new Date();
+  labelDate.setDate(labelDate.getDate() + dayOffset);
+  byId("dateLabel").textContent = dayOffset === 0 ? "Сегодня" : labelDate.toLocaleDateString("ru-RU", { weekday: 'short', day: 'numeric', month: 'short' });
+                                                     }
+      function renderNext24Hours() {
+      if (!rawData || !rawData.hourly) return;
+      const list = byId("next24List");
+      list.replaceChildren();
 
-    async function loadWeather() {
-      const button = byId("refreshButton");
-      const status = byId("status");
-      button.disabled = true;
-      status.textContent = "Обновляем погоду…";
-      status.classList.remove("error");
-
-      try {
-        const response = await fetch(WEATHER_URL, { cache: "no-store" });
-        if (!response.ok) {
-          throw new Error("Ошибка API: HTTP " + response.status + " " + response.statusText);
-        }
-
-        const data = await response.json();
-        const current = data && data.current;
-        if (!current) {
-          throw new Error("В ответе API нет текущих погодных данных.");
-        }
-
-        const temperature = Number(current.temperature_2m);
-        const pressureHpa = Number(current.surface_pressure);
-        const windSpeed = Number(current.wind_speed_10m);
-        const windDegrees = Number(current.wind_direction_10m);
-        const windGusts = Number(current.wind_gusts_10m);
-        const cloudCover = Number(current.cloud_cover);
-        const radiation = Number(current.shortwave_radiation);
-
-        if (![temperature, pressureHpa, windSpeed, windDegrees].every(Number.isFinite)) {
-          throw new Error("API вернул неполные или некорректные погодные данные.");
-        }
-
-        byId("temperature").textContent = formatNumber(temperature, 1) + "°C";
-        byId("pressure").textContent = formatNumber(pressureHpa / 1.333, 0) + " мм";
-        byId("wind").textContent = formatNumber(windSpeed, 1) + " м/с";
-        byId("direction").textContent = getWindDirection(windDegrees);
+      const now = new Date();
+      now.setHours(now.getHours() + 1, 0, 0, 0); 
+      
+      for (let i = 0; i < 8; i++) {
+        const targetDate = new Date(now.getTime() + i * 3 * 60 * 60 * 1000);
+        const isoStr = targetDate.toISOString().substring(0, 13) + ":00";
         
-        byId("gusts").textContent = Number.isFinite(windGusts) ? formatNumber(windGusts, 1) + " м/с" : "—";
-        byId("clouds").textContent = Number.isFinite(cloudCover) ? formatNumber(cloudCover, 0) + " %" : "—";
-        byId("radiation").textContent = Number.isFinite(radiation) ? formatNumber(radiation, 0) + " Вт/м²" : "—";
+        const idx = rawData.hourly.time.indexOf(isoStr);
+        if (idx === -1) continue;
 
-        const updatedAt = current.time
-          ? new Date(current.time).toLocaleString("ru-RU", { dateStyle: "short", timeStyle: "short" })
-          : new Date().toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
-        status.textContent = "Обновлено: " + updatedAt;
-      } catch (error) {
-        status.textContent = "Не удалось обновить погоду: " + (error && error.message ? error.message : "неизвестная ошибка");
-        status.classList.add("error");
-      } finally {
-        button.disabled = false;
+        const t = rawData.hourly.temperature_2m[idx];
+        const p = rawData.hourly.surface_pressure[idx] / 1.333;
+        const w = rawData.hourly.wind_speed_10m[idx];
+
+        const row = document.createElement("div");
+        row.className = "forecast-row";
+        
+        const timeStr = i === 0 ? "След.час" : targetDate.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
+
+        row.innerHTML = `
+          <div class="f-time">${timeStr}</div>
+          <div class="f-temp">${formatNumber(t, 1)}°</div>
+          <div class="f-press">${formatNumber(p, 0)} мм</div>
+          <div class="f-wind">${formatNumber(w, 1)} м/с</div>
+        `;
+        list.appendChild(row);
       }
     }
 
-    function getScoreLabel(score) {
-      if (score >= 5) return "Отлично";
-      if (score >= 4) return "Хорошо";
-      if (score >= 3) return "Средне";
-      if (score >= 2) return "Слабо";
-      return "Плохо";
-    }
-
-    function renderHourly(fish) {
-      const scores = FISH_SCORES[fish] || FISH_SCORES["Окунь"];
-      const grid = byId("hoursGrid");
-      grid.replaceChildren();
-
-      HOURS.forEach((hour, index) => {
-        const score = scores[index];
-        const cell = document.createElement("div");
-        cell.className = "hour";
-
-        const time = document.createElement("span");
-        time.className = "hour-time";
-        time.textContent = hour;
-
-        const ring = document.createElement("span");
-        ring.className = "score-ring";
-        ring.textContent = score + "/5";
-        ring.setAttribute("aria-label", "Оценка " + score + " из 5");
-
-        const label = document.createElement("span");
-        label.className = "score-label";
-        label.textContent = getScoreLabel(score);
-
-        cell.append(time, ring, label);
-        grid.appendChild(cell);
-      });
-
-      byId("selectedFishLabel").textContent = "Рыба: " + fish;
-    }
-
-    function renderBait(fish) {
-      byId("baitValue").textContent = BAITS[fish] || "—";
-    }
+    byId("prevDay").addEventListener("click", () => {
+      if (dayOffset > -3) { dayOffset--; renderCurrent(); }
+    });
+    byId("nextDay").addEventListener("click", () => {
+      if (dayOffset < 0) { dayOffset++; renderCurrent(); }
+    });
 
     function renderMoon() {
       const el = byId("moonValue");
@@ -291,17 +364,38 @@
       const times = SunCalc.getMoonTimes(date, LATITUDE, LONGITUDE);
       const fmt = (d) => d ? d.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" }) : "—";
       
-      el.innerHTML = icons[idx] + " " + pct + "%<br>Восход: " + fmt(times.rise) + "<br>Закат: " + fmt(times.set);
+      const isWaxing = fraction < 0.5;
+      const trendStr = isWaxing ? "↑ растет" : "↓ убывает";
+
+      el.innerHTML = icons[idx] + " " + pct + "% (" + trendStr + ")<br>Восход: " + fmt(times.rise) + "<br>Закат: " + fmt(times.set);
     }
+
+    function renderHourly(fish) {
+      const scores = FISH_SCORES[fish] || FISH_SCORES["Окунь"];
+      const grid = byId("hoursGrid");
+      grid.replaceChildren();
+      HOURS.forEach((hour, index) => {
+        const score = scores[index];
+        const cell = document.createElement("div");
+        cell.className = "hour";
+        cell.innerHTML = `
+          <span class="hour-time">${hour}</span>
+          <span class="score-ring">${score}/5</span>
+          <span class="score-label">${score >= 5 ? 'Отлично' : score >= 4 ? 'Хорошо' : score >= 3 ? 'Средне' : score >= 2 ? 'Слабо' : 'Плохо'}</span>
+        `;
+        grid.appendChild(cell);
+      });
+      byId("selectedFishLabel").textContent = "Рыба: " + fish;
+    }
+
+    function renderBait(fish) { byId("baitValue").textContent = BAITS[fish] || "—"; }
 
     byId("fishSelector").addEventListener("click", (event) => {
       const button = event.target.closest("button[data-fish]");
       if (!button) return;
-
       byId("fishSelector").querySelectorAll("button").forEach((item) => {
         item.classList.toggle("selected", item === button);
       });
-      
       renderHourly(button.dataset.fish);
       renderBait(button.dataset.fish);
     });
