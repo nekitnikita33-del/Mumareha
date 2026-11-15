@@ -43,8 +43,7 @@
     .trend.up { color: #ff9b9b; }
     .trend.down { color: #8de0b1; }
     
-    .side { display: flex; flex-direction:
-      column; gap: 10px; min-width: 0; }
+    .side { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
     .bait-card { padding: 12px; }
     .bait-value { margin-top: 8px; font-size: 14px; font-weight: 750; color: #b9f2d0; overflow-wrap: anywhere; }
     .moon-card { padding: 12px; }
@@ -115,7 +114,7 @@
           <strong class="place-name">Мумариха</strong>
           <span class="control-label" id="dateLabel">Сегодня</span>
         </div>
-        <button class="nav-btn" id="nextDay" type="button" aria-label="Следующий день" disabled>👉</button>
+        <button class="nav-btn" id="nextDay" type="button" aria-label="Следующий день">👉</button>
       </div>
       <button class="refresh" id="refreshButton" type="button">Обновить ↻</button>
     </section>
@@ -152,8 +151,7 @@
         </article>
         <article class="moon-card card">
           <div class="eyebrow">Луна</div>
-          <div class="moon-value"
-            id="moonValue">—</div>
+          <div class="moon-value" id="moonValue">—</div>
         </article>
         <article class="best-card card">
           <div class="eyebrow">Лучше клюёт сегодня</div>
@@ -197,14 +195,13 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
-
   <script>
     "use strict";
 
     const LATITUDE = 56.311017;
     const LONGITUDE = 46.502217;
 
-    const WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=56.311017&longitude=46.502217&current=temperature_2m,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m,cloud_cover,shortwave_radiation&hourly=temperature_2m,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m,cloud_cover,shortwave_radiation&past_days=3&forecast_days=2&wind_speed_unit=ms&timezone=auto";
+    const WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=56.311017&longitude=46.502217&current=temperature_2m,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m,cloud_cover,shortwave_radiation&hourly=temperature_2m,surface_pressure,wind_speed_10m,cloud_cover,shortwave_radiation&past_days=3&forecast_days=3&wind_speed_unit=ms&timezone=auto";
 
     const DIRECTIONS = ["С", "СВ", "В", "ЮВ", "Ю", "ЮЗ", "З", "СЗ"];
     const HOURS = ["3:00", "6:00", "8:00", "12:00", "14:00", "17:00", "19:00", "21:00", "23:00"];
@@ -223,7 +220,14 @@
 
     let rawData = null;      
     let dayOffset = 0;       
-    let cachedWaterTemps = {}; // Хранилище температуры воды по дням (YYYY-MM-DD -> temp)
+    let cachedWaterTemps = {};
+
+    function getLocalDateStr(dateObj) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, "0");
+      const d = String(dateObj.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
 
     function getWindDirection(degrees) {
       if (!Number.isFinite(degrees)) return "—";
@@ -247,13 +251,9 @@
         if (!response.ok) throw new Error("Ошибка API: HTTP " + response.status);
 
         rawData = await response.json();
-        
-        // Инициализируем температуру воды на основе воздуха / динамики
         initWaterTemperatures();
-
         renderCurrent();
         renderNext24Hours();
-        
         status.textContent = "Обновлено: " + new Date().toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
       } catch (error) {
         status.textContent = "Ошибка загрузки: " + error.message;
@@ -263,33 +263,30 @@
       }
     }
 
-    // Оцениваем или берем температуру
-    воды по дням для ретроспективы и завтра
     function initWaterTemperatures() {
       if (!rawData || !rawData.hourly) return;
-      
       const times = rawData.hourly.time;
       const temps = rawData.hourly.temperature_2m;
-      
-      // Группируем среднюю дневную температуру воздуха, чтобы смоделировать температуру воды в заберегах/мелководье
       let dailyMap = {};
+
       times.forEach((tStr, idx) => {
         const dayKey = tStr.split("T")[0];
         if (!dailyMap[dayKey]) dailyMap[dayKey] = [];
-        dailyMap[dayKey].push(temps[idx]);
+        if (Number.isFinite(temps[idx])) dailyMap[dayKey].push(temps[idx]);
       });
 
-      let calculatedWater = {};
-      Object.keys(dailyMap).forEach(day => {
+      const sortedDays = Object.keys(dailyMap).sort();
+      let prevWater = null;
+
+      sortedDays.forEach(day => {
         const arr = dailyMap[day];
         const avgAir = arr.reduce((a, b) => a + b, 0) / arr.length;
-        // Эмпирическая формула для мелководного затона: вода следует за воздухом сглажено
-        let waterT = Math.round((avgAir * 0.7 + 4) * 10) / 10; 
-        if (waterT < 0.5) waterT = 0.5; // не даем уходить в минус летом/весной глубоко
-        calculatedWater[day] = waterT;
+        // Базовая оценка температуры воды с учётом инерции от предыдущего дня
+        const targetWater = Math.max(0.5, avgAir * 0.65 + 3.5);
+        const smoothWater = prevWater === null ? targetWater : (prevWater * 0.7 + targetWater * 0.3);
+        prevWater = smoothWater;
+        cachedWaterTemps[day] = Number(smoothWater.toFixed(1));
       });
-
-      cachedWaterTemps = calculatedWater;
     }
 
     function renderCurrent() {
@@ -298,18 +295,17 @@
       const current = rawData.current;
       const targetDate = new Date();
       targetDate.setDate(targetDate.getDate() + dayOffset);
-      const dateStr = targetDate.toISOString().split('T')[0];
+      const dateStr = getLocalDateStr(targetDate);
+      const todayStr = getLocalDateStr(new Date());
 
-      // Управляем видимостью лишних полей для прошлых дней (убираем порывы и направления на прошлые дни, оставляем только ветер)
-      const isPastOrFutureDay = (dayOffset !== 0);
-      
-      byId("gustsMetricBox").style.display = isPastOrFutureDay ? "none" : "block";
-      byId("directionMetricBox").style.display = isPastOrFutureDay ? "none" : "block";
-      byId("cloudsMetricBox").style.display = isPastOrFutureDay ? "none" : "block";
-      byId("radiationMetricBox").style.display = isPastOrFutureDay ? "none" : "block";
+      // На прошлые дни и завтра убираем порывы и направление ветра, оставляем только чистый ветер
+      const isOtherDay = (dayOffset !== 0);
+      byId("gustsMetricBox").style.display = isOtherDay ? "none" : "";
+      byId("directionMetricBox").style.display = isOtherDay ? "none" : "";
+      byId("cloudsMetricBox").style.display = isOtherDay ? "none" : "";
+      byId("radiationMetricBox").style.display = isOtherDay ? "none" : "";
 
       if (dayOffset === 0) {
-        // СЕГОДНЯ
         byId("weatherTitle").textContent = "Сейчас в Мумарихе";
         byId("temperature").textContent = formatNumber(current.temperature_2m, 1) + "°C";
         byId("pressure").textContent = formatNumber(current.surface_pressure / 1.333, 0) + " мм";
@@ -318,61 +314,56 @@
         byId("direction").textContent = getWindDirection(current.wind_direction_10m);
         byId("clouds").textContent = formatNumber(current.cloud_cover, 0) + " %";
         byId("radiation").textContent = formatNumber(current.shortwave_radiation, 0) + " Вт/м²";
-        
-        // Вода сегодня
-        byId("water").textContent = (cachedWaterTemps[dateStr] ? cachedWaterTemps[dateStr] : "12.5") + "°C";
+        byId("water").textContent = (cachedWaterTemps[todayStr] ?? "—") + "°C";
       } else {
-        // ПРОШЛЫЕ ДНИ (-3, -2, -1) ИЛИ ЗАВТРА (+1)
         const targetTime = dateStr + "T12:00";
         const idx = rawData.hourly.time.indexOf(targetTime);
-        
         if (idx !== -1) {
-          byId("weatherTitle").textContent = dayOffset > 0 ? "Завтра днем" : "Днем " + targetDate.toLocaleDateString("ru-RU", { day: 'numeric', month: 'short' });
+          byId("weatherTitle").textContent = dayOffset > 0
+            ? "Завтра днём"
+            : "Днём " + targetDate.toLocaleDateString("ru-RU", { day: "numeric", month: "short" });
           byId("temperature").textContent = formatNumber(rawData.hourly.temperature_2m[idx], 1) + "°C";
           byId("pressure").textContent = formatNumber(rawData.hourly.surface_pressure[idx] / 1.333, 0) + " мм";
-          
-          // Для прошлых и будущих дней оставляем только чистый ветер без порывов и направлений
           byId("wind").textContent = formatNumber(rawData.hourly.wind_speed_10m[idx], 1) + " м/с";
         } else {
-          byId("weatherTitle").textContent = targetDate.toLocaleDateString("ru-RU", { day: 'numeric', month: 'short' });
+          byId("weatherTitle").textContent = targetDate.toLocaleDateString("ru-RU", { day: "numeric", month: "short" });
           byId("temperature").textContent = "—°";
           byId("pressure").textContent = "—";
           byId("wind").textContent = "—";
         }
 
-        // Подставляем температуру воды (для завтра берем сегодняшнюю или сглаженную, для прошлых — архивную динамику)
         if (dayOffset === 1) {
-          // Завтра: переносим сегодняшнюю температуру воды
-          const todayStr = new Date().toISOString().split('T')[0];
-          byId("water").textContent = (cachedWaterTemps[todayStr] ? cachedWaterTemps[todayStr] : "12.5") + "°C (осинотр.)";
+          // На завтра переносим сегодняшнюю температуру воды
+          byId("water").textContent = (cachedWaterTemps[todayStr] ?? "—") + "°C";
         } else {
-          // Прошлые дни: показываем архивную динамику воды
-          byId("water").textContent = (cachedWaterTemps[dateStr] ? cachedWaterTemps[dateStr] : "—") + "°C";
+          // На прошлые дни показываем динамику температуры воды за конкретный день
+          byId("water").textContent = (cachedWaterTemps[dateStr] ?? "—") + "°C";
         }
       }
 
-      // Тренд давления
-      let pTrendEl = byId("pressureTrend");
-      let currentPressure = current.surface_pressure;
-      if (rawData.hourly && rawData.hourly.surface_pressure) {
+      const pTrendEl = byId("pressureTrend");
+      if (dayOffset === 0 && rawData.hourly && rawData.hourly.surface_pressure) {
         const nowStr = current.time.substring(0, 14) + "00";
         const idx = rawData.hourly.time.indexOf(nowStr);
         if (idx > 0) {
-           const prevP = rawData.hourly.surface_pressure[idx - 1];
-           const diff = currentPressure - prevP;
-           if (diff > 0.5) { pTrendEl.textContent = "↑"; pTrendEl.className = "trend up"; }
-           else if (diff < -0.5) { pTrendEl.textContent = "↓"; pTrendEl.className = "trend down"; }
-           else { pTrendEl.textContent = "→"; pTrendEl.className = "trend"; }
+          const prevP = rawData.hourly.surface_pressure[idx - 1];
+          const diff = current.surface_pressure - prevP;
+          if (diff > 0.5) { pTrendEl.textContent = "↑"; pTrendEl.className = "trend up"; }
+          else if (diff < -0.5) { pTrendEl.textContent = "↓"; pTrendEl.className = "trend down"; }
+          else { pTrendEl.textContent = "→"; pTrendEl.className = "trend"; }
         }
+      } else {
+        pTrendEl.textContent = "";
       }
-      
-      byId("prevDay").disabled = (dayOffset
-                                  <= -3);
-      byId("nextDay").disabled = (dayOffset >= 1); // теперь разрешаем смотреть и завтра
-      
-      const labelDate = new Date();
-      labelDate.setDate(labelDate.getDate() + dayOffset);
-      byId("dateLabel").textContent = dayOffset === 0 ? "Сегодня" : dayOffset === 1 ? "Завтра" : labelDate.toLocaleDateString("ru-RU", { weekday: 'short', day: 'numeric', month: 'short' });
+
+      byId("prevDay").disabled = (dayOffset <= -3);
+      byId("nextDay").disabled = (dayOffset >= 1);
+
+      byId("dateLabel").textContent = dayOffset === 0
+        ? "Сегодня"
+        : dayOffset === 1
+          ? "Завтра"
+          : targetDate.toLocaleDateString("ru-RU", { weekday: "short", day: "numeric", month: "short" });
     }
 
     function renderNext24Hours() {
@@ -381,12 +372,12 @@
       list.replaceChildren();
 
       const now = new Date();
-      now.setHours(now.getHours() + 1, 0, 0, 0); 
-      
+      now.setHours(now.getHours() + 1, 0, 0, 0);
+
       for (let i = 0; i < 8; i++) {
         const targetDate = new Date(now.getTime() + i * 3 * 60 * 60 * 1000);
-        const isoStr = targetDate.toISOString().substring(0, 13) + ":00";
-        
+        const isoStr = getLocalDateStr(targetDate) + "T" + String(targetDate.getHours()).padStart(2, "0") + ":00";
+
         const idx = rawData.hourly.time.indexOf(isoStr);
         if (idx === -1) continue;
 
@@ -396,7 +387,6 @@
 
         const row = document.createElement("div");
         row.className = "forecast-row";
-        
         const timeStr = i === 0 ? "След.час" : targetDate.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
 
         row.innerHTML = `
@@ -426,10 +416,8 @@
       const idx = Math.min(7, Math.floor(fraction * 8));
       const times = SunCalc.getMoonTimes(date, LATITUDE, LONGITUDE);
       const fmt = (d) => d ? d.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" }) : "—";
-      
       const isWaxing = fraction < 0.5;
       const trendStr = isWaxing ? "↑ растет" : "↓ убывает";
-
       el.innerHTML = icons[idx] + " " + pct + "% (" + trendStr + ")<br>Восход: " + fmt(times.rise) + "<br>Закат: " + fmt(times.set);
     }
 
